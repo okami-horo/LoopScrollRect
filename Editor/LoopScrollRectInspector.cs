@@ -31,6 +31,8 @@ public class LoopScrollRectInspector : Editor
     //==========LoopScrollRect==========
     SerializedProperty totalCount;
     SerializedProperty reverseDirection;
+    SerializedProperty m_InertiaSnapToCell;
+    SerializedProperty m_SnappingScrollMode;
     int index = 0;
     float offset = 0;
     LoopScrollRectBase.ScrollMode scrollMode = LoopScrollRectBase.ScrollMode.ToStart;
@@ -62,6 +64,8 @@ public class LoopScrollRectInspector : Editor
         //==========LoopScrollRect==========
         totalCount = serializedObject.FindProperty("totalCount");
         reverseDirection = serializedObject.FindProperty("reverseDirection");
+        m_InertiaSnapToCell = serializedObject.FindProperty("m_InertiaSnapToCell");
+        m_SnappingScrollMode = serializedObject.FindProperty("m_SnappingScrollMode");
     }
 
     protected virtual void OnDisable()
@@ -172,7 +176,7 @@ public class LoopScrollRectInspector : Editor
 
             EditorGUI.indentLevel--;
         }
-        
+
         EditorGUILayout.Space();
 
         EditorGUILayout.PropertyField(m_OnValueChanged);
@@ -181,16 +185,27 @@ public class LoopScrollRectInspector : Editor
         EditorGUILayout.LabelField("Loop Scroll Rect", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(totalCount);
         EditorGUILayout.PropertyField(reverseDirection);
-        
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Snapping Options", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(m_InertiaSnapToCell, new GUIContent("Snap To Cell On Inertia End", "Whether the scroll view should snap to a cell when inertia scrolling ends"));
+        if (m_InertiaSnapToCell.boolValue)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(m_SnappingScrollMode, new GUIContent("Snapping Mode", "The mode used when snapping to a cell after inertia scrolling"));
+            EditorGUI.indentLevel--;
+        }
+
         serializedObject.ApplyModifiedProperties();
-        
+
         LoopScrollRectBase scroll = (LoopScrollRectBase)target;
         GUI.enabled = Application.isPlaying;
-        
+
         EditorGUILayout.Space();
 
         EditorGUILayout.BeginHorizontal();
-        if(GUILayout.Button("Clear"))
+        if (GUILayout.Button("Clear"))
         {
             scroll.ClearCells();
         }
@@ -198,11 +213,11 @@ public class LoopScrollRectInspector : Editor
         {
             scroll.RefreshCells();
         }
-        if(GUILayout.Button("Refill"))
+        if (GUILayout.Button("Refill"))
         {
             scroll.RefillCells();
         }
-        if(GUILayout.Button("RefillFromEnd"))
+        if (GUILayout.Button("RefillFromEnd"))
         {
             scroll.RefillCellsFromEnd();
         }
@@ -221,20 +236,20 @@ public class LoopScrollRectInspector : Editor
         EditorGUILayout.BeginHorizontal();
         EditorGUIUtility.labelWidth = 60;
         EditorGUI.indentLevel++;
-        speed = EditorGUILayout.FloatField("Speed", speed, GUILayout.Width(w+15));
+        speed = EditorGUILayout.FloatField("Speed", speed, GUILayout.Width(w + 15));
         EditorGUI.indentLevel--;
-        if(GUILayout.Button("Scroll With Speed", GUILayout.Width(130)))
+        if (GUILayout.Button("Scroll With Speed", GUILayout.Width(130)))
         {
             scroll.ScrollToCell(index, speed, offset, scrollMode);
         }
         EditorGUILayout.EndHorizontal();
-        
+
         EditorGUILayout.BeginHorizontal();
         EditorGUIUtility.labelWidth = 60;
         EditorGUI.indentLevel++;
-        time = EditorGUILayout.FloatField("Time", time, GUILayout.Width(w+15));
+        time = EditorGUILayout.FloatField("Time", time, GUILayout.Width(w + 15));
         EditorGUI.indentLevel--;
-        if(GUILayout.Button("Scroll Within Time", GUILayout.Width(130)))
+        if (GUILayout.Button("Scroll Within Time", GUILayout.Width(130)))
         {
             scroll.ScrollToCellWithinTime(index, time, offset, scrollMode);
         }

@@ -83,8 +83,7 @@ namespace UnityEngine.UI
         protected GridLayoutGroup m_GridLayout = null;
         protected float contentSpacing
         {
-            get
-            {
+            get {
                 if (m_ContentSpaceInit)
                 {
                     return m_ContentSpacing;
@@ -120,8 +119,7 @@ namespace UnityEngine.UI
         private int m_ContentConstraintCount = 0;
         protected int contentConstraintCount
         {
-            get
-            {
+            get {
                 if (m_ContentConstraintCountInit)
                 {
                     return m_ContentConstraintCount;
@@ -149,30 +147,27 @@ namespace UnityEngine.UI
         /// </summary>
         protected int StartLine
         {
-            get
-            {
+            get {
                 return Mathf.CeilToInt((float)(itemTypeStart) / contentConstraintCount);
             }
         }
-        
+
         /// <summary>
         /// Current line count in scroll. Grid may have multiply items in one line.
         /// </summary>
         protected int CurrentLines
         {
-            get
-            {
+            get {
                 return Mathf.CeilToInt((float)(itemTypeEnd - itemTypeStart) / contentConstraintCount);
             }
         }
-        
+
         /// <summary>
         /// Total line count in scroll. Grid may have multiply items in one line.
         /// </summary>
         protected int TotalLines
         {
-            get
-            {
+            get {
                 return Mathf.CeilToInt((float)(totalCount) / contentConstraintCount);
             }
         }
@@ -259,7 +254,7 @@ namespace UnityEngine.UI
         /// <summary>
         /// Event type used by the ScrollRect.
         /// </summary>
-        public class ScrollRectEvent : UnityEvent<Vector2> {}
+        public class ScrollRectEvent : UnityEvent<Vector2> { }
 
         [SerializeField]
         protected RectTransform m_Content;	//==========LoopScrollRect==========
@@ -469,12 +464,10 @@ namespace UnityEngine.UI
         /// </example>
         public Scrollbar horizontalScrollbar
         {
-            get
-            {
+            get {
                 return m_HorizontalScrollbar;
             }
-            set
-            {
+            set {
                 if (m_HorizontalScrollbar)
                     m_HorizontalScrollbar.onValueChanged.RemoveListener(SetHorizontalNormalizedPosition);
                 m_HorizontalScrollbar = value;
@@ -511,12 +504,10 @@ namespace UnityEngine.UI
         /// </example>
         public Scrollbar verticalScrollbar
         {
-            get
-            {
+            get {
                 return m_VerticalScrollbar;
             }
-            set
-            {
+            set {
                 if (m_VerticalScrollbar)
                     m_VerticalScrollbar.onValueChanged.RemoveListener(SetVerticalNormalizedPosition);
                 m_VerticalScrollbar = value;
@@ -609,8 +600,7 @@ namespace UnityEngine.UI
 
         protected RectTransform viewRect
         {
-            get
-            {
+            get {
                 if (m_ViewRect == null)
                     m_ViewRect = m_Viewport;
                 if (m_ViewRect == null)
@@ -649,8 +639,7 @@ namespace UnityEngine.UI
         [System.NonSerialized] private RectTransform m_Rect;
         private RectTransform rectTransform
         {
-            get
-            {
+            get {
                 if (m_Rect == null)
                     m_Rect = GetComponent<RectTransform>();
                 return m_Rect;
@@ -662,11 +651,27 @@ namespace UnityEngine.UI
 
         private DrivenRectTransformTracker m_Tracker;
 
+        [SerializeField]
+        [Tooltip("Whether the scroll view should snap to a cell when inertia scrolling ends")]
+        private bool m_InertiaSnapToCell = false;
+        /// <summary>
+        /// Whether the scroll view should snap to a cell when inertia scrolling ends.
+        /// </summary>
+        public bool inertiaSnapToCell { get { return m_InertiaSnapToCell; } set { m_InertiaSnapToCell = value; } }
+
+        [SerializeField]
+        [Tooltip("The mode used when snapping to a cell after inertia scrolling (ToStart or ToCenter)")]
+        private ScrollMode m_SnappingScrollMode = ScrollMode.ToStart;
+        /// <summary>
+        /// The mode used when snapping to a cell after inertia scrolling.
+        /// </summary>
+        public ScrollMode snappingScrollMode { get { return m_SnappingScrollMode; } set { m_SnappingScrollMode = value; } }
+
         protected LoopScrollRectBase()
-        {}
+        { }
 
         //==========LoopScrollRect==========
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         protected override void Awake()
         {
             base.Awake();
@@ -685,7 +690,7 @@ namespace UnityEngine.UI
                     Debug.Assert(!m_Vertical && m_Horizontal, this);
             }
         }
-        #endif
+#endif
 
         public void ClearCells()
         {
@@ -720,7 +725,7 @@ namespace UnityEngine.UI
             }
             return idx + itemTypeStart;
         }
-        
+
         public int GetLastItem(out float offset)
         {
             if (direction == LoopScrollRectDirection.Vertical)
@@ -742,7 +747,7 @@ namespace UnityEngine.UI
             offset = -offset;
             return itemTypeEnd - idx - 1;
         }
-        
+
         public enum ScrollMode
         {
             /// <summary>
@@ -776,7 +781,7 @@ namespace UnityEngine.UI
             StopAllCoroutines();
             StartCoroutine(ScrollToCellCoroutine(index, speed, offset, mode));
         }
-        
+
         public void ScrollToCellWithinTime(int index, float time, float offset = 0, ScrollMode mode = ScrollMode.ToStart)
         {
             if (totalCount >= 0 && (index < 0 || index >= totalCount))
@@ -878,14 +883,14 @@ namespace UnityEngine.UI
                         else // ScrollMode.FirstAppear
                         {
                             float min_delta = GetDimension(m_ViewBounds.min - m_ItemBounds.min);
-                            float max_delta =  GetDimension(m_ViewBounds.max - m_ItemBounds.max);
+                            float max_delta = GetDimension(m_ViewBounds.max - m_ItemBounds.max);
                             if (direction == LoopScrollRectDirection.Vertical)
                             {
                                 if (min_delta > 0)
                                 {
                                     delta = min_delta;
                                 }
-                                else if(max_delta < 0)
+                                else if (max_delta < 0)
                                 {
                                     delta = max_delta;
                                 }
@@ -896,7 +901,7 @@ namespace UnityEngine.UI
                                 {
                                     delta = min_delta;
                                 }
-                                else if(max_delta > 0)
+                                else if (max_delta > 0)
                                 {
                                     delta = max_delta;
                                 }
@@ -1036,7 +1041,7 @@ namespace UnityEngine.UI
             }
 
             Vector2 pos = m_Content.anchoredPosition;
-            float padding_dist =  GetAbsDimension(new Vector2(m_ContentLeftPadding + m_ContentRightPadding, m_ContentTopPadding + m_ContentBottomPadding));
+            float padding_dist = GetAbsDimension(new Vector2(m_ContentLeftPadding + m_ContentRightPadding, m_ContentTopPadding + m_ContentBottomPadding));
             float dist = Mathf.Max(0, sizeFilled + padding_dist - sizeToFill);
             if (direction == LoopScrollRectDirection.Vertical)
                 pos.y = reverseDirection ? -dist : dist;
@@ -1290,7 +1295,7 @@ namespace UnityEngine.UI
         {
             ScrollToCell(index, speed);
         }
-        
+
         [Obsolete("SrollToCellWithinTime(int, float) has been renamed to ScrollToCellWithinTime(int, float).")]
         public void SrollToCellWithinTime(int index, float time)
         {
@@ -1317,10 +1322,10 @@ namespace UnityEngine.UI
         }
 
         public virtual void LayoutComplete()
-        {}
+        { }
 
         public virtual void GraphicUpdateComplete()
-        {}
+        { }
 
         void UpdateCachedData()
         {
@@ -1518,6 +1523,12 @@ namespace UnityEngine.UI
                 return;
 
             m_Dragging = false;
+
+            // If inertia is disabled or velocity is very small, we might want to snap immediately
+            if (m_InertiaSnapToCell && (!m_Inertia || m_Velocity.sqrMagnitude < 50f))
+            {
+                SnapToNearestCell();
+            }
         }
 
         /// <summary>
@@ -1640,6 +1651,13 @@ namespace UnityEngine.UI
                 }
 
                 SetContentAnchoredPosition(position);
+
+                // Check if inertia scrolling has nearly stopped and snap to nearest cell if enabled
+                if (m_InertiaSnapToCell && m_Inertia && !m_Dragging && m_Velocity.sqrMagnitude < 4f)
+                {
+                    // We're approaching the end of inertia, snap to nearest cell
+                    SnapToNearestCell();
+                }
             }
 
             if (m_Dragging && m_Inertia)
@@ -1651,9 +1669,9 @@ namespace UnityEngine.UI
             if (m_ViewBounds != m_PrevViewBounds || m_ContentBounds != m_PrevContentBounds || m_Content.anchoredPosition != m_PrevPosition)
             {
                 UpdateScrollbars(offset);
-                #if UNITY_2017_1_OR_NEWER
+#if UNITY_2017_1_OR_NEWER
                 UISystemProfilerApi.AddMarker("ScrollRect.value", this);
-                #endif
+#endif
                 m_OnValueChanged.Invoke(normalizedPosition);
                 UpdatePrevData();
             }
@@ -1690,7 +1708,7 @@ namespace UnityEngine.UI
                 offset = m_ContentBounds.min.x - elementSize * StartLine - contentSpacing * StartLine;
             }
         }
-        
+
         public void GetVerticalOffsetAndSize(out float totalSize, out float offset)
         {
             float paddingSize = m_ContentTopPadding + m_ContentBottomPadding;
@@ -1767,12 +1785,10 @@ namespace UnityEngine.UI
         /// </example>
         public Vector2 normalizedPosition
         {
-            get
-            {
+            get {
                 return new Vector2(horizontalNormalizedPosition, verticalNormalizedPosition);
             }
-            set
-            {
+            set {
                 SetNormalizedPosition(value.x, 0);
                 SetNormalizedPosition(value.y, 1);
             }
@@ -1802,8 +1818,7 @@ namespace UnityEngine.UI
         /// </example>
         public float horizontalNormalizedPosition
         {
-            get
-            {
+            get {
                 UpdateBounds();
                 //==========LoopScrollRect==========
                 if (totalCount > 0 && itemTypeEnd > itemTypeStart)
@@ -1819,8 +1834,7 @@ namespace UnityEngine.UI
                     return 0.5f;
                 //==========LoopScrollRect==========
             }
-            set
-            {
+            set {
                 SetNormalizedPosition(value, 0);
             }
         }
@@ -1850,8 +1864,7 @@ namespace UnityEngine.UI
 
         public float verticalNormalizedPosition
         {
-            get
-            {
+            get {
                 UpdateBounds();
                 //==========LoopScrollRect==========
                 if (totalCount > 0 && itemTypeEnd > itemTypeStart)
@@ -1867,8 +1880,7 @@ namespace UnityEngine.UI
                     return 0.5f;
                 //==========LoopScrollRect==========
             }
-            set
-            {
+            set {
                 SetNormalizedPosition(value, 1);
             }
         }
@@ -1906,14 +1918,14 @@ namespace UnityEngine.UI
             else
             {
                 GetVerticalOffsetAndSize(out totalSize, out offset);
-                
+
                 if (totalSize >= m_ViewBounds.size.y)
                 {
                     newAnchoredPosition -= offset - value * (totalSize - m_ViewBounds.size.y) - m_ViewBounds.max.y;
                 }
             }
             //==========LoopScrollRect==========
-            
+
             Vector3 anchoredPosition = m_Content.anchoredPosition;
             if (Mathf.Abs(anchoredPosition[axis] - newAnchoredPosition) > 0.01f)
             {
@@ -1940,8 +1952,7 @@ namespace UnityEngine.UI
 
         private bool hScrollingNeeded
         {
-            get
-            {
+            get {
                 if (Application.isPlaying)
                     return m_ContentBounds.size.x > m_ViewBounds.size.x + 0.01f;
                 return true;
@@ -1949,8 +1960,7 @@ namespace UnityEngine.UI
         }
         private bool vScrollingNeeded
         {
-            get
-            {
+            get {
                 if (Application.isPlaying)
                     return m_ContentBounds.size.y > m_ViewBounds.size.y + 0.01f;
                 return true;
@@ -1960,12 +1970,12 @@ namespace UnityEngine.UI
         /// <summary>
         /// Called by the layout system.
         /// </summary>
-        public virtual void CalculateLayoutInputHorizontal() {}
+        public virtual void CalculateLayoutInputHorizontal() { }
 
         /// <summary>
         /// Called by the layout system.
         /// </summary>
-        public virtual void CalculateLayoutInputVertical() {}
+        public virtual void CalculateLayoutInputVertical() { }
 
         /// <summary>
         /// Called by the layout system.
@@ -2134,7 +2144,7 @@ namespace UnityEngine.UI
                 m_ContentBounds = GetBounds();
             }
             // ============LoopScrollRect============
-            
+
             Vector3 contentSize = m_ContentBounds.size;
             Vector3 contentPos = m_ContentBounds.center;
             var contentPivot = m_Content.pivot;
@@ -2226,7 +2236,7 @@ namespace UnityEngine.UI
             bounds.Encapsulate(vMax);
             return bounds;
         }
-        
+
         //==========LoopScrollRect==========
         private Bounds GetBounds4Item(int index)
         {
@@ -2258,7 +2268,7 @@ namespace UnityEngine.UI
             {
                 float totalSize, offset;
                 GetHorizonalOffsetAndSize(out totalSize, out offset);
-                
+
                 Vector3 center = contentBound.center;
                 center.x = offset;
                 contentBound.Encapsulate(center);
@@ -2285,7 +2295,7 @@ namespace UnityEngine.UI
             Vector2 offset = Vector2.zero;
             if (movementType == MovementType.Unrestricted)
                 return offset;
-            
+
             Vector2 min = contentBounds.min;
             Vector2 max = contentBounds.max;
 
@@ -2344,14 +2354,78 @@ namespace UnityEngine.UI
             CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
             LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
         }
-        /* We don't need `[ExecuteAlways]` so comment here
-        #if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            SetDirtyCaching();
-        }
 
-        #endif
-        */
+        /// <summary>
+        /// Snap to the nearest cell based on current scroll position when inertia scrolling ends
+        /// </summary>
+        protected void SnapToNearestCell()
+        {
+            // Stop any existing inertia
+            StopMovement();
+
+            // Find current visible items
+            float offset = 0;
+            int firstItem = 0;
+            int targetItem = 0;
+
+            if (direction == LoopScrollRectDirection.Vertical)
+            {
+                if (reverseDirection)
+                    firstItem = GetLastItem(out offset);
+                else
+                    firstItem = GetFirstItem(out offset);
+            }
+            else
+            {
+                if (reverseDirection)
+                    firstItem = GetLastItem(out offset);
+                else
+                    firstItem = GetFirstItem(out offset);
+            }
+
+            // Calculate center of viewport
+            Vector2 viewportCenter = new Vector2(m_ViewBounds.center.x, m_ViewBounds.center.y);
+            float closestDistance = float.MaxValue;
+
+            // Find the cell closest to the center or start of viewport depending on snap mode
+            for (int i = itemTypeStart; i < itemTypeEnd; i++)
+            {
+                Bounds itemBounds = GetBounds4Item(i);
+                float distance = 0;
+
+                if (m_SnappingScrollMode == ScrollMode.ToCenter)
+                {
+                    // Use distance to center
+                    Vector2 itemCenter = new Vector2(itemBounds.center.x, itemBounds.center.y);
+                    distance = Mathf.Abs(GetDimension(viewportCenter - itemCenter));
+                }
+                else // ScrollMode.ToStart or other
+                {
+                    // Use distance to start edge
+                    if (direction == LoopScrollRectDirection.Vertical)
+                    {
+                        distance = reverseDirection ?
+                            Mathf.Abs(m_ViewBounds.min.y - itemBounds.min.y) :
+                            Mathf.Abs(m_ViewBounds.max.y - itemBounds.max.y);
+                    }
+                    else
+                    {
+                        distance = reverseDirection ?
+                            Mathf.Abs(itemBounds.max.x - m_ViewBounds.max.x) :
+                            Mathf.Abs(itemBounds.min.x - m_ViewBounds.min.x);
+                    }
+                }
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    targetItem = i;
+                }
+            }
+
+            // Scroll to the target item with a quick animation
+            float snapSpeed = 10f; // Fast enough to seem responsive but not instant
+            ScrollToCell(targetItem, snapSpeed, 0, m_SnappingScrollMode);
+        }
     }
 }
