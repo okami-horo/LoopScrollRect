@@ -667,6 +667,22 @@ namespace UnityEngine.UI
         /// </summary>
         public ScrollMode snappingScrollMode { get { return m_SnappingScrollMode; } set { m_SnappingScrollMode = value; } }
 
+        [SerializeField]
+        [Tooltip("When inertia velocity magnitude is below this value, snapping to cell will start")]
+        private float m_InertiaSnapThreshold = 4f;
+        /// <summary>
+        /// When inertia velocity magnitude is below this value, snapping to cell will start
+        /// </summary>
+        public float inertiaSnapThreshold { get { return m_InertiaSnapThreshold; } set { m_InertiaSnapThreshold = Mathf.Max(0.1f, value); } }
+
+        [SerializeField]
+        [Tooltip("Duration in seconds for the snap animation")]
+        private float m_SnapAnimationTime = 0.25f;
+        /// <summary>
+        /// Duration in seconds for the snap animation
+        /// </summary>
+        public float snapAnimationTime { get { return m_SnapAnimationTime; } set { m_SnapAnimationTime = Mathf.Max(0.01f, value); } }
+
         protected LoopScrollRectBase()
         { }
 
@@ -1525,7 +1541,7 @@ namespace UnityEngine.UI
             m_Dragging = false;
 
             // If inertia is disabled or velocity is very small, we might want to snap immediately
-            if (m_InertiaSnapToCell && (!m_Inertia || m_Velocity.sqrMagnitude < 50f))
+            if (m_InertiaSnapToCell && (!m_Inertia || m_Velocity.sqrMagnitude < m_InertiaSnapThreshold * m_InertiaSnapThreshold * 0.25f))
             {
                 SnapToNearestCell();
             }
@@ -1653,7 +1669,7 @@ namespace UnityEngine.UI
                 SetContentAnchoredPosition(position);
 
                 // Check if inertia scrolling has nearly stopped and snap to nearest cell if enabled
-                if (m_InertiaSnapToCell && m_Inertia && !m_Dragging && m_Velocity.sqrMagnitude < 4f)
+                if (m_InertiaSnapToCell && m_Inertia && !m_Dragging && m_Velocity.sqrMagnitude < m_InertiaSnapThreshold * m_InertiaSnapThreshold)
                 {
                     // We're approaching the end of inertia, snap to nearest cell
                     SnapToNearestCell();
@@ -2423,9 +2439,8 @@ namespace UnityEngine.UI
                 }
             }
 
-            // Scroll to the target item with a quick animation
-            float snapSpeed = 10f; // Fast enough to seem responsive but not instant
-            ScrollToCell(targetItem, snapSpeed, 0, m_SnappingScrollMode);
+            // Use time-based scrolling for consistent animation duration
+            ScrollToCellWithinTime(targetItem, m_SnapAnimationTime, 0, m_SnappingScrollMode);
         }
     }
 }

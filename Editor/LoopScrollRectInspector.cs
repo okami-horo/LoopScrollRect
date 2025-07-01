@@ -33,6 +33,8 @@ public class LoopScrollRectInspector : Editor
     SerializedProperty reverseDirection;
     SerializedProperty m_InertiaSnapToCell;
     SerializedProperty m_SnappingScrollMode;
+    SerializedProperty m_InertiaSnapThreshold;
+    SerializedProperty m_SnapAnimationTime;
     int index = 0;
     float offset = 0;
     LoopScrollRectBase.ScrollMode scrollMode = LoopScrollRectBase.ScrollMode.ToStart;
@@ -66,6 +68,8 @@ public class LoopScrollRectInspector : Editor
         reverseDirection = serializedObject.FindProperty("reverseDirection");
         m_InertiaSnapToCell = serializedObject.FindProperty("m_InertiaSnapToCell");
         m_SnappingScrollMode = serializedObject.FindProperty("m_SnappingScrollMode");
+        m_InertiaSnapThreshold = serializedObject.FindProperty("m_InertiaSnapThreshold");
+        m_SnapAnimationTime = serializedObject.FindProperty("m_SnapAnimationTime");
     }
 
     protected virtual void OnDisable()
@@ -194,6 +198,8 @@ public class LoopScrollRectInspector : Editor
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(m_SnappingScrollMode, new GUIContent("Snapping Mode", "The mode used when snapping to a cell after inertia scrolling"));
+            EditorGUILayout.PropertyField(m_InertiaSnapThreshold, new GUIContent("Snap Threshold", "When inertia velocity magnitude is below this value, snapping to cell will start"));
+            EditorGUILayout.PropertyField(m_SnapAnimationTime, new GUIContent("Snap Animation Time", "Duration in seconds for the snap animation"));
             EditorGUI.indentLevel--;
         }
 
